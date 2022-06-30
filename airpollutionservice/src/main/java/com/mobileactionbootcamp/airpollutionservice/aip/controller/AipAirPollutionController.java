@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/air-pollution-api/v1")
@@ -23,7 +23,7 @@ public class AipAirPollutionController {
                                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date start,
                                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date end){
 
-        List<Components> components = aipAirPollutionService.getHistoricalAirPollutionData(location, start, end);
+        Components components = aipAirPollutionService.getHistoricalAirPollutionData(location, start, end);
         return ResponseEntity.ok(components);
     }
 }

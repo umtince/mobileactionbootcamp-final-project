@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "co",
@@ -29,19 +31,19 @@ import lombok.Setter;
 public class Components {
 
     @JsonProperty("co")
-    private Double co;
+    private BigDecimal co;
     @JsonProperty("no")
-    private Double no;
+    private BigDecimal no;
     @JsonProperty("no2")
-    private Double no2;
+    private BigDecimal no2;
     @JsonProperty("o3")
-    private Double o3;
+    private BigDecimal o3;
     @JsonProperty("so2")
-    private Double so2;
+    private BigDecimal so2;
     @JsonProperty("pm2_5")
-    private Double pm25;
+    private BigDecimal pm25;
     @JsonProperty("pm10")
-    private Double pm10;
+    private BigDecimal pm10;
     @JsonProperty("nh3")
-    private Double nh3;
+    private BigDecimal nh3;
 }

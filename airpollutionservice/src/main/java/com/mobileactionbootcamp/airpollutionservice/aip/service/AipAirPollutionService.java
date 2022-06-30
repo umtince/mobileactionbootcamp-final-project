@@ -29,7 +29,7 @@ public class AipAirPollutionService {
 
     private GeoGeocoding geoGeocoding;
 
-    public List<Components> getHistoricalAirPollutionData(String location, Date start, Date end){
+    public Components getHistoricalAirPollutionData(String location, Date start, Date end){
 
         geoGeocoding = geoGeocodingService.getCoordinatesByLocationName(location);
 
@@ -37,24 +37,25 @@ public class AipAirPollutionService {
         long endTime = convertToUnixDate(end);
         String json = makeWeatherApiRequest(geoGeocoding.getLat(), geoGeocoding.getLon(), startTime, endTime);
 
-        List<Components> componentsList = parseJsonComponents(json);
-        //Components components = parseAverage(componentsList);
+        Components components = parseAverageJsonComponents(json);
 
-        return componentsList;
+        return components;
     }
 
-   /* private Components parseAverage(String json){
+    private Components parseAverageJsonComponents(String json){
 
-        Components components = JsonPath.p
+        Components dailyAverageComponents = new Components();
 
+        dailyAverageComponents.setCo(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.co.avg()")));
+        dailyAverageComponents.setNo(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.no.avg()")));
+        dailyAverageComponents.setNo2(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.no2.avg()")));
+        dailyAverageComponents.setO3(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.o3.avg()")));
+        dailyAverageComponents.setSo2(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.so2.avg()")));
+        dailyAverageComponents.setPm25(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.pm2_5.avg()")));
+        dailyAverageComponents.setPm10(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.pm10.avg()")));
+        dailyAverageComponents.setNh3(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.nh3.avg()")));
 
-
-        return null;
-    }*/
-    private List<Components> parseJsonComponents(String json){
-
-        List<Components> componentsList = JsonPath.read(json, "$..components");
-        return componentsList;
+        return dailyAverageComponents;
     }
 
     public String makeWeatherApiRequest(BigDecimal lat, BigDecimal lon, long startTime, long endTime){
