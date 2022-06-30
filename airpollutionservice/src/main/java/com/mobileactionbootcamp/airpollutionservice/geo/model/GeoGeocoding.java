@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "name",
@@ -24,7 +26,7 @@ public class GeoGeocoding {
     @JsonProperty("name")
     private String name;
     @JsonProperty("lat")
-    private Double lat;
+    private BigDecimal lat;
     @JsonProperty("lon")
-    private Double lon;
+    private BigDecimal lon;
 }
