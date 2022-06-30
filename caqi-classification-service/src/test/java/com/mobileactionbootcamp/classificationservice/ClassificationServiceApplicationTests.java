@@ -1,10 +1,10 @@
-package com.mobileactionbootcamp.caqiclassificationservice;
+package com.mobileactionbootcamp.classificationservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CaqiClassificationServiceApplicationTests {
+class ClassificationServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
