@@ -21,6 +21,7 @@ public class GeoGeocodingService {
                 .retrieve()
                 .bodyToMono(GeoGeocoding.class)
                 .block();
+
         return geoGeocoding;
     }
 }

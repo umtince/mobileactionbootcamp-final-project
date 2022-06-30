@@ -1,4 +1,3 @@
-
 package com.mobileactionbootcamp.airpollutionservice.aip.model;
 
 import javax.annotation.Generated;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -29,6 +27,5 @@ public class AipAirPollution {
     private JsonNode coord = null;
     @JsonProperty("list")
     private JsonNode aipList = null;
-
 
 }

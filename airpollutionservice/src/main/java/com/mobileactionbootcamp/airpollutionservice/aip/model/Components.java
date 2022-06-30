@@ -1,4 +1,3 @@
-
 package com.mobileactionbootcamp.airpollutionservice.aip.model;
 
 import javax.annotation.Generated;
@@ -46,4 +45,5 @@ public class Components {
     private BigDecimal pm10;
     @JsonProperty("nh3")
     private BigDecimal nh3;
+
 }

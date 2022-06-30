@@ -1,9 +1,6 @@
 package com.mobileactionbootcamp.airpollutionservice.aip.service;
 
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.internal.JsonContext;
-import com.mobileactionbootcamp.airpollutionservice.aip.model.AipAirPollution;
 import com.mobileactionbootcamp.airpollutionservice.aip.model.Components;
 import com.mobileactionbootcamp.airpollutionservice.geo.model.GeoGeocoding;
 import com.mobileactionbootcamp.airpollutionservice.geo.service.GeoGeocodingService;
@@ -12,10 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

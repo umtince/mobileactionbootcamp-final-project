@@ -29,4 +29,5 @@ public class GeoGeocoding {
     private BigDecimal lat;
     @JsonProperty("lon")
     private BigDecimal lon;
+
 }
