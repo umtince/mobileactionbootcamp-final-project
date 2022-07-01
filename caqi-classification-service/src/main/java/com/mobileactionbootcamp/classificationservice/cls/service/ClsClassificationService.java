@@ -23,9 +23,12 @@ public class ClsClassificationService {
 
         Components components = aipAirPollutionService.getHistoricalAirPollutionData(location, start, end);
 
+        ClsCategories clsCategories = new ClsCategories();
+        clsCategories.getCo().setCategory(evaluateCoLevels(components.getCo()));
+        clsCategories.getSo2().setCategory(evaluateSo2Levels(components.getSo2()));
+        clsCategories.getO3().setCategory(evaluateO3Levels(components.getO3()));
 
-
-        return null;
+        return clsCategories;
     }
 
     private String evaluateCoLevels(BigDecimal co){
@@ -50,13 +53,47 @@ public class ClsClassificationService {
         return result;
     }
 
-    /*private String evaluateSo2Levels(BigDecimal so2){
+    private String evaluateSo2Levels(BigDecimal so2){
+        so2 = so2.setScale(1, RoundingMode.HALF_UP);
+        String result = "";
 
+        if(so2.compareTo(BigDecimal.valueOf(41)) == LESS){
+            result = "Good";
+        } else if (so2.compareTo(BigDecimal.valueOf(81)) == LESS) {
+            result = "Satisfactory";
+        } else if (so2.compareTo(BigDecimal.valueOf(381)) == LESS) {
+            result = "Moderate";
+        } else if (so2.compareTo(BigDecimal.valueOf(801)) == LESS) {
+            result = "Poor";
+        } else if (so2.compareTo(BigDecimal.valueOf(1600)) == EQUAL || so2.compareTo(BigDecimal.valueOf(1600)) == LESS) {
+            result = "Severe";
+        } else if (so2.compareTo(BigDecimal.valueOf(1600)) == MORE) {
+            result = "Hazardous";
+        }
+
+        return result;
     }
 
     private String evaluateO3Levels(BigDecimal o3){
+        o3 = o3.setScale(1, RoundingMode.HALF_UP);
+        String result = "";
 
-    }*/
+        if(o3.compareTo(BigDecimal.valueOf(51)) == LESS){
+            result = "Good";
+        } else if (o3.compareTo(BigDecimal.valueOf(101)) == LESS) {
+            result = "Satisfactory";
+        } else if (o3.compareTo(BigDecimal.valueOf(169)) == LESS) {
+            result = "Moderate";
+        } else if (o3.compareTo(BigDecimal.valueOf(209)) == LESS) {
+            result = "Poor";
+        } else if (o3.compareTo(BigDecimal.valueOf(748)) == EQUAL || o3.compareTo(BigDecimal.valueOf(748)) == LESS) {
+            result = "Severe";
+        } else if (o3.compareTo(BigDecimal.valueOf(748)) == MORE) {
+            result = "Hazardous";
+        }
+
+        return result;
+    }
 
 
 
