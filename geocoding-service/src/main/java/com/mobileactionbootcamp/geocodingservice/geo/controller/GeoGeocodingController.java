@@ -1,6 +1,5 @@
 package com.mobileactionbootcamp.geocodingservice.geo.controller;
 
-import com.mobileactionbootcamp.geocodingservice.geo.model.GeoGeocoding;
 import com.mobileactionbootcamp.geocodingservice.geo.service.GeoGeocodingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -14,7 +13,7 @@ public class AipAirPollutionService {
 
     private final WebClient.Builder webClientBuilder;
 
-    public Components getHistoricalAirPollutionData(String location, Date start, Date end){
+    public Components getHistoricalAirPollutionData(String location, String start, String end){
 
         Components components = webClientBuilder
                 .baseUrl("http://localhost:8082")

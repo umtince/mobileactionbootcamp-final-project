@@ -1,6 +1,5 @@
 package com.mobileactionbootcamp.airpollutionservice.aip.controller;
 
-import com.mobileactionbootcamp.airpollutionservice.aip.model.AipAirPollution;
 import com.mobileactionbootcamp.airpollutionservice.aip.model.Components;
 import com.mobileactionbootcamp.airpollutionservice.aip.service.AipAirPollutionService;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @RestController
@@ -20,8 +19,8 @@ public class AipAirPollutionController {
 
     @GetMapping("/historical/{location}/{start}/{end}")
     public ResponseEntity getHistoricalAirPollutionData(@PathVariable String location,
-                                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date start,
-                                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date end){
+                                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate start,
+                                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate end){
 
         Components components = aipAirPollutionService.getHistoricalAirPollutionData(location, start, end);
         return ResponseEntity.ok(components);

@@ -1,16 +1,18 @@
 package com.mobileactionbootcamp.classificationservice.cls.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ClsCategories {
     private ClsBaseComponents co;
     private ClsBaseComponents so2;
     private ClsBaseComponents o3;
+
+    public ClsCategories(){
+        this.co = new ClsBaseComponents();
+        this.so2 = new ClsBaseComponents();
+        this.o3 = new ClsBaseComponents();
+    }
 }

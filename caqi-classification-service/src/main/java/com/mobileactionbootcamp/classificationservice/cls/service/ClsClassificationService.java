@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +20,9 @@ public class ClsClassificationService {
     private int MORE = 1;
     private final AipAirPollutionService aipAirPollutionService;
 
-    public ClsCategories getAqiResults(String location, Date start , Date end){
+    public ClsCategories getAqiResults(String location, LocalDate start , LocalDate end){
 
-        Components components = aipAirPollutionService.getHistoricalAirPollutionData(location, start, end);
+        Components components = aipAirPollutionService.getHistoricalAirPollutionData(location, parseDateToString(start), parseDateToString(end));
 
         ClsCategories clsCategories = new ClsCategories();
         clsCategories.getCo().setCategory(evaluateCoLevels(components.getCo()));
@@ -29,6 +30,11 @@ public class ClsClassificationService {
         clsCategories.getO3().setCategory(evaluateO3Levels(components.getO3()));
 
         return clsCategories;
+    }
+
+    private String parseDateToString(LocalDate date){
+        DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return date.format(DATE_FORMATTER);
     }
 
     private String evaluateCoLevels(BigDecimal co){

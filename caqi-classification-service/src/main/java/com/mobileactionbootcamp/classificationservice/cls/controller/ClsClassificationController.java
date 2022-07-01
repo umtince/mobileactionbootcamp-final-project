@@ -5,12 +5,9 @@ import com.mobileactionbootcamp.classificationservice.cls.service.ClsClassificat
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/classification/api/v1")
@@ -21,11 +18,11 @@ public class ClsClassificationController {
 
     @GetMapping("/aqi/{location}/{start}/{end}")
     public ResponseEntity getAqiResults(@PathVariable String location,
-                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date start,
-                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date end){
+                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate start,
+                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate end){
 
         ClsCategories clsCategories = clsClassificationService.getAqiResults(location, start, end);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(clsCategories);
     }
 }

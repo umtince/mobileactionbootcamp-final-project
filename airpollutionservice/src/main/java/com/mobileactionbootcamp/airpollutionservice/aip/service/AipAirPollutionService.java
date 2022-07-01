@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +27,7 @@ public class AipAirPollutionService {
 
     private GeoGeocoding geoGeocoding;
 
-    public Components getHistoricalAirPollutionData(String location, Date start, Date end){
+    public Components getHistoricalAirPollutionData(String location, LocalDate start, LocalDate end){
 
         geoGeocoding = geoGeocodingService.getCoordinatesByLocationName(location);
 
@@ -36,6 +39,7 @@ public class AipAirPollutionService {
 
         return components;
     }
+
 
     private Components parseAverageJsonComponents(String json){
 
@@ -67,8 +71,8 @@ public class AipAirPollutionService {
         return json;
     }
 
-    private long convertToUnixDate(Date date){
-        long unixTime = date.getTime() / 1000L;
-        return unixTime;
+    private long convertToUnixDate(LocalDate date){
+        long epoch = date.toEpochSecond(LocalTime.MIN, ZoneOffset.UTC);
+        return epoch;
     }
 }
