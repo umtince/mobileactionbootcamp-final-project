@@ -28,20 +28,18 @@ public class AqsAirQualityService {
             throw new Exception("End date can not be before start date!");
         }
 
-        AqsAirQualityDocument aqsAirQualityDocument = getAirQualityDocumentWithResults(city, start, end);
+        AqsAirQualityDocument aqsAirQualityDocument = getAirQualityDocumentResponse(city, start, end);
 
         return aqsAirQualityDocument;
     }
 
-    private AqsAirQualityDocument getAirQualityDocumentWithResults(String city, LocalDate start, LocalDate end){
+    private AqsAirQualityDocument getAirQualityDocumentResponse(String city, LocalDate start, LocalDate end){
 
-        AqsAirQualityDocument responseDocument = new AqsAirQualityDocument();
-        responseDocument.setCity(city);
+        AqsAirQualityDocument responseDocument = createEmptyDocumentWithCity(city);
 
         AqsAirQualityDocument documentInDb = getExistingDocumentByCity(city);
         if(documentInDb == null){
-            documentInDb = new AqsAirQualityDocument();
-            documentInDb.setCity(city);
+            documentInDb = createEmptyDocumentWithCity(city);
         }
 
         LocalDate incrementedStart = start;
@@ -56,13 +54,20 @@ public class AqsAirQualityService {
                 AqsResults resultsFromApi = getAirQualityResultsFromApi(city, incrementedStart, incrementedStart.plusDays(1));
                 responseDocument.addResuls(resultsFromApi);
                 documentInDb.addResuls(resultsFromApi);
-                documentInDb = aqsAirQualityDocumentDao.save(documentInDb);
             }
 
             incrementedStart = incrementedStart.plusDays(1);
         }
 
+        aqsAirQualityDocumentDao.save(documentInDb);
         return responseDocument;
+    }
+
+    private AqsAirQualityDocument createEmptyDocumentWithCity(String city){
+        AqsAirQualityDocument aqsAirQualityDocument = new AqsAirQualityDocument();
+        aqsAirQualityDocument.setCity(city);
+
+        return aqsAirQualityDocument;
     }
 
     private AqsResults getAirQualityResultsFromApi(String city, LocalDate start, LocalDate end){
