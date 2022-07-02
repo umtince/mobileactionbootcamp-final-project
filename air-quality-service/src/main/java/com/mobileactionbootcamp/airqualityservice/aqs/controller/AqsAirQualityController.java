@@ -1,5 +1,6 @@
 package com.mobileactionbootcamp.airqualityservice.aqs.controller;
 
+import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsAirQualityDocument;
 import com.mobileactionbootcamp.airqualityservice.aqs.service.AqsAirQualityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,16 +20,18 @@ public class AqsAirQualityController {
 
     private final AqsAirQualityService aqsAirQualityService;
 
-    @GetMapping
+    @GetMapping("/air-quality/{city}/{start}/{end}")
     public ResponseEntity getAirQuality(@PathVariable String city,
                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate start,
                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate end){
 
+        AqsAirQualityDocument aqsAirQualityDocument;
+        String ret = "";
         try {
-            aqsAirQualityService.handleAirQualityRequest(city,start,end);
+            aqsAirQualityDocument = aqsAirQualityService.handleAirQualityRequest(city,start,end);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(aqsAirQualityDocument);
     }
 }
