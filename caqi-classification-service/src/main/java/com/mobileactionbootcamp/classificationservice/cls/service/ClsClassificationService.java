@@ -2,7 +2,7 @@ package com.mobileactionbootcamp.classificationservice.cls.service;
 
 import com.mobileactionbootcamp.classificationservice.aip.model.Components;
 import com.mobileactionbootcamp.classificationservice.aip.service.AipAirPollutionService;
-import com.mobileactionbootcamp.classificationservice.cls.model.ClsCategories;
+import com.mobileactionbootcamp.classificationservice.cls.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +25,12 @@ public class ClsClassificationService {
         Components components = aipAirPollutionService.getHistoricalAirPollutionData(location, parseDateToString(start), parseDateToString(end));
 
         ClsCategories clsCategories = new ClsCategories();
-        clsCategories.getCo().setCategory(evaluateCoLevels(components.getCo()));
+        /*clsCategories.getCo().setCategory(evaluateCoLevels(components.getCo()));
         clsCategories.getSo2().setCategory(evaluateSo2Levels(components.getSo2()));
-        clsCategories.getO3().setCategory(evaluateO3Levels(components.getO3()));
+        clsCategories.getO3().setCategory(evaluateO3Levels(components.getO3()));*/
+        clsCategories.getCo().setCo(evaluateCoLevels(components.getCo()));
+        clsCategories.getSo2().setSo2(evaluateSo2Levels(components.getSo2()));
+        clsCategories.getO3().setO3(evaluateO3Levels(components.getO3()));
 
         return clsCategories;
     }

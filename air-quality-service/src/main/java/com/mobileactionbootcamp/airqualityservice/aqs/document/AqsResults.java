@@ -1,5 +1,6 @@
 package com.mobileactionbootcamp.airqualityservice.aqs.document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategories;
 import lombok.Data;
 import lombok.Getter;
@@ -13,7 +14,9 @@ import java.util.List;
 @Setter
 public class AqsResults {
 
+    @JsonProperty("Date")
     private String date;
+    @JsonProperty("Categories")
     private List<ClsCategories> categoriesList;
 
     public AqsResults(){

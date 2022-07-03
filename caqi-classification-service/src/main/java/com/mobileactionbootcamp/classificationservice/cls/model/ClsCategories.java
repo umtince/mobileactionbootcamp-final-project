@@ -6,13 +6,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClsCategories {
-    private ClsBaseComponents co;
-    private ClsBaseComponents so2;
-    private ClsBaseComponents o3;
+    private ClsCo co;
+    private ClsSo2 so2;
+    private ClsO3 o3;
 
     public ClsCategories(){
-        this.co = new ClsBaseComponents();
-        this.so2 = new ClsBaseComponents();
-        this.o3 = new ClsBaseComponents();
+        this.co = new ClsCo();
+        this.so2 = new ClsSo2();
+        this.o3 = new ClsO3();
     }
 }
