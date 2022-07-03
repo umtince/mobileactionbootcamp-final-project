@@ -1,6 +1,7 @@
 package com.mobileactionbootcamp.classificationservice.cls.controller;
 
 import com.mobileactionbootcamp.classificationservice.cls.model.ClsCategories;
+import com.mobileactionbootcamp.classificationservice.cls.model.ClsCategoriesWrapper;
 import com.mobileactionbootcamp.classificationservice.cls.service.ClsClassificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,8 +22,8 @@ public class ClsClassificationController {
                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate start,
                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate end){
 
-        ClsCategories clsCategories = clsClassificationService.getAqiResults(location, start, end);
+        ClsCategoriesWrapper clsCategoriesWrapper = clsClassificationService.getAqiResults(location, start, end);
 
-        return ResponseEntity.ok(clsCategories);
+        return ResponseEntity.ok(clsCategoriesWrapper);
     }
 }

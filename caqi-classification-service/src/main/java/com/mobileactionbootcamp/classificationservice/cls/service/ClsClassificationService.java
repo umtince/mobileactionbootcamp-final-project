@@ -1,5 +1,7 @@
 package com.mobileactionbootcamp.classificationservice.cls.service;
 
+import com.mobileactionbootcamp.classificationservice.aip.model.AipDailyComponents;
+import com.mobileactionbootcamp.classificationservice.aip.model.AipDailyComponentsWrapper;
 import com.mobileactionbootcamp.classificationservice.aip.model.Components;
 import com.mobileactionbootcamp.classificationservice.aip.service.AipAirPollutionService;
 import com.mobileactionbootcamp.classificationservice.cls.model.*;
@@ -20,19 +22,32 @@ public class ClsClassificationService {
     private int MORE = 1;
     private final AipAirPollutionService aipAirPollutionService;
 
-    public ClsCategories getAqiResults(String location, LocalDate start , LocalDate end){
+    public ClsCategoriesWrapper getAqiResults(String location, LocalDate start , LocalDate end){
 
-        Components components = aipAirPollutionService.getHistoricalAirPollutionData(location, parseDateToString(start), parseDateToString(end));
+        AipDailyComponentsWrapper aipDailyComponentsWrapper = aipAirPollutionService.getHistoricalAirPollutionData(location, parseDateToString(start), parseDateToString(end));
 
-        ClsCategories clsCategories = new ClsCategories();
+        ClsCategoriesWrapper clsCategoriesWrapper = new ClsCategoriesWrapper();
+        ClsCategories clsCategories;
+        for(AipDailyComponents aipDailyComponents : aipDailyComponentsWrapper.getAipDailyComponentsList()){
+            clsCategories = new ClsCategories();
+            clsCategories.setDate(aipDailyComponents.getDate());
+
+            clsCategories.getCo().setCo(evaluateCoLevels(aipDailyComponents.getComponents().getCo()));
+            clsCategories.getSo2().setSo2(evaluateSo2Levels(aipDailyComponents.getComponents().getSo2()));
+            clsCategories.getO3().setO3(evaluateO3Levels(aipDailyComponents.getComponents().getO3()));
+
+            clsCategoriesWrapper.getClsCategoriesList().add(clsCategories);
+        }
+
+        //ClsCategories clsCategories = new ClsCategories();
         /*clsCategories.getCo().setCategory(evaluateCoLevels(components.getCo()));
         clsCategories.getSo2().setCategory(evaluateSo2Levels(components.getSo2()));
         clsCategories.getO3().setCategory(evaluateO3Levels(components.getO3()));*/
-        clsCategories.getCo().setCo(evaluateCoLevels(components.getCo()));
+       /* clsCategories.getCo().setCo(evaluateCoLevels(components.getCo()));
         clsCategories.getSo2().setSo2(evaluateSo2Levels(components.getSo2()));
-        clsCategories.getO3().setO3(evaluateO3Levels(components.getO3()));
+        clsCategories.getO3().setO3(evaluateO3Levels(components.getO3()));*/
 
-        return clsCategories;
+        return clsCategoriesWrapper;
     }
 
     private String parseDateToString(LocalDate date){

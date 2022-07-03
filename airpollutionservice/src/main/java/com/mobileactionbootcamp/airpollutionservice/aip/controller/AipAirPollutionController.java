@@ -1,6 +1,7 @@
 package com.mobileactionbootcamp.airpollutionservice.aip.controller;
 
 import com.mobileactionbootcamp.airpollutionservice.aip.model.AipDailyComponents;
+import com.mobileactionbootcamp.airpollutionservice.aip.model.AipDailyComponentsWrapper;
 import com.mobileactionbootcamp.airpollutionservice.aip.model.Components;
 import com.mobileactionbootcamp.airpollutionservice.aip.service.AipAirPollutionService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AipAirPollutionController {
                                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate start,
                                                         @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate end){
 
-        List<AipDailyComponents> aipDailyComponents = aipAirPollutionService.getHistoricalAirPollutionData(location, start, end);
-        return ResponseEntity.ok(aipDailyComponents);
+        AipDailyComponentsWrapper aipDailyComponentsWrapper = aipAirPollutionService.getHistoricalAirPollutionData(location, start, end);
+        return ResponseEntity.ok(aipDailyComponentsWrapper);
     }
 }

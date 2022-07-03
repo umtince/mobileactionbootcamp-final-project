@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClsCategories {
+    private String date;
     private ClsCo co;
     private ClsSo2 so2;
     private ClsO3 o3;

@@ -3,6 +3,7 @@ package com.mobileactionbootcamp.airpollutionservice.aip.service;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import com.mobileactionbootcamp.airpollutionservice.aip.model.AipDailyComponents;
+import com.mobileactionbootcamp.airpollutionservice.aip.model.AipDailyComponentsWrapper;
 import com.mobileactionbootcamp.airpollutionservice.aip.model.Components;
 import com.mobileactionbootcamp.airpollutionservice.geo.model.GeoGeocoding;
 import com.mobileactionbootcamp.airpollutionservice.geo.service.GeoGeocodingService;
@@ -31,7 +32,7 @@ public class AipAirPollutionService {
 
     private GeoGeocoding geoGeocoding;
 
-    public List<AipDailyComponents> getHistoricalAirPollutionData(String location, LocalDate start, LocalDate end){
+    public AipDailyComponentsWrapper getHistoricalAirPollutionData(String location, LocalDate start, LocalDate end){
 
         geoGeocoding = geoGeocodingService.getCoordinatesByLocationName(location);
 
@@ -42,7 +43,11 @@ public class AipAirPollutionService {
         ReadContext ctx = JsonPath.parse(json);
         //Components components = parseAverageJsonComponents(json);
 
-        return parseDailyJsonComponents(ctx);
+        List<AipDailyComponents> aipDailyComponentsList = parseDailyJsonComponents(ctx);
+        AipDailyComponentsWrapper aipDailyComponentsWrapper = new AipDailyComponentsWrapper();
+        aipDailyComponentsWrapper.setAipDailyComponentsList(aipDailyComponentsList);
+
+        return aipDailyComponentsWrapper;
 
         //return components;
     }
