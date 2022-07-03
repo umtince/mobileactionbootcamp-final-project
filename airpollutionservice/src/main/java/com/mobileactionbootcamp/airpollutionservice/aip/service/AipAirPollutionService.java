@@ -1,18 +1,22 @@
 package com.mobileactionbootcamp.airpollutionservice.aip.service;
 
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
+import com.mobileactionbootcamp.airpollutionservice.aip.model.AipDailyComponents;
 import com.mobileactionbootcamp.airpollutionservice.aip.model.Components;
 import com.mobileactionbootcamp.airpollutionservice.geo.model.GeoGeocoding;
 import com.mobileactionbootcamp.airpollutionservice.geo.service.GeoGeocodingService;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -27,7 +31,7 @@ public class AipAirPollutionService {
 
     private GeoGeocoding geoGeocoding;
 
-    public Components getHistoricalAirPollutionData(String location, LocalDate start, LocalDate end){
+    public List<AipDailyComponents> getHistoricalAirPollutionData(String location, LocalDate start, LocalDate end){
 
         geoGeocoding = geoGeocodingService.getCoordinatesByLocationName(location);
 
@@ -35,14 +39,64 @@ public class AipAirPollutionService {
         long endTime = convertToUnixDate(end);
         String json = makeWeatherApiRequest(geoGeocoding.getLat(), geoGeocoding.getLon(), startTime, endTime);
 
-        Components components = parseAverageJsonComponents(json);
+        ReadContext ctx = JsonPath.parse(json);
+        //Components components = parseAverageJsonComponents(json);
 
-        return components;
+        return parseDailyJsonComponents(ctx);
+
+        //return components;
+    }
+
+    private List<AipDailyComponents> parseDailyJsonComponents(ReadContext json){
+
+
+
+        JSONArray jsonComponentsArray = json.read( "$.list[*]");
+        int jsonComponentNumber = jsonComponentsArray.size();
+        int dtStart = 0;
+        int dtEnd = 0;
+        String startDate = "";
+        String endDate = "";
+        int startIndex;
+        int endIndex = 0;
+        List<AipDailyComponents> aipDailyComponentsList = new ArrayList<>();
+        AipDailyComponents aipDailyComponents;
+
+
+        dtStart = json.read( "$.list[0].dt");
+        startDate = convertToLocalDateString(dtStart);
+        startIndex = 0;
+        for(int i=0; i<jsonComponentNumber; i++){
+            //dtStart = Long.parseLong(JsonPath.read(json, "$.list["+i+"].dt"));
+
+            dtEnd = json.read( "$.list["+i+"].dt");
+            endDate = convertToLocalDateString(dtEnd);
+            endIndex++;
+            if(startDate.equals(endDate)){
+                continue;
+            }
+            else {
+                aipDailyComponents = new AipDailyComponents();
+                aipDailyComponents.setDate(startDate);
+                aipDailyComponents.setComponents(parseAverageJsonComponents(json.read( "$.list["+startIndex+":"+endIndex+"]")));
+
+                aipDailyComponentsList.add(aipDailyComponents);
+
+                dtStart = json.read( "$.list["+i+"].dt");
+                startDate = convertToLocalDateString(dtStart);
+                startIndex = i;
+
+            }
+        }
+
+        return aipDailyComponentsList;
     }
 
 
-    private Components parseAverageJsonComponents(String json){
 
+    private Components parseAverageJsonComponents(JSONArray jsonArray){
+
+        String json = jsonArray.toJSONString();
         Components dailyAverageComponents = new Components();
 
         dailyAverageComponents.setCo(BigDecimal.valueOf((Double) JsonPath.read(json, "$..components.co.avg()")));
@@ -69,6 +123,17 @@ public class AipAirPollutionService {
                 .block();
 
         return json;
+    }
+
+    private String convertToLocalDateString(long epoch){
+
+        Instant instant = Instant.ofEpochSecond( epoch );
+        return parseDateToString(LocalDateTime.ofInstant(instant, ZoneOffset.UTC).toLocalDate());
+    }
+
+    private String parseDateToString(LocalDate date){
+        DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return date.format(DATE_FORMATTER);
     }
 
     private long convertToUnixDate(LocalDate date){
