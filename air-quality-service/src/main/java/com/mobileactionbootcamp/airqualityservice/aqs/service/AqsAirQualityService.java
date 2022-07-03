@@ -80,8 +80,6 @@ public class AqsAirQualityService {
         resultsFromApi.addCategory(clsCategories.getSo2());
         resultsFromApi.addCategory(clsCategories.getO3());
 
-        //resultsFromApi.addCategory(clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end)));
-
         return resultsFromApi;
     }
 
