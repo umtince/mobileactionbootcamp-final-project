@@ -3,6 +3,7 @@ package com.mobileactionbootcamp.airqualityservice.aqs.service;
 import com.mobileactionbootcamp.airqualityservice.aqs.dao.AqsAirQualityDocumentDao;
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsAirQualityDocument;
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsResults;
+import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategories;
 import com.mobileactionbootcamp.airqualityservice.cls.service.ClsClassificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,13 @@ public class AqsAirQualityService {
     private AqsResults getAirQualityResultsFromApi(String city, LocalDate start, LocalDate end){
         AqsResults resultsFromApi = new AqsResults();
         resultsFromApi.setDate(parseDateToString(start));
-        resultsFromApi.addCategory(clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end)));
+        ClsCategories clsCategories = clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end));
+
+        resultsFromApi.addCategory(clsCategories.getCo());
+        resultsFromApi.addCategory(clsCategories.getSo2());
+        resultsFromApi.addCategory(clsCategories.getO3());
+
+        //resultsFromApi.addCategory(clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end)));
 
         return resultsFromApi;
     }
