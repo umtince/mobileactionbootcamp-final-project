@@ -7,13 +7,13 @@ import lombok.Setter;
 @Setter
 public class ClsCategories {
     private String date;
-    private ClsCo co;
-    private ClsSo2 so2;
-    private ClsO3 o3;
+    private String co;
+    private String so2;
+    private String o3;
 
-    public ClsCategories(){
+    /*public ClsCategories(){
         this.co = new ClsCo();
         this.so2 = new ClsSo2();
         this.o3 = new ClsO3();
-    }
+    }*/
 }

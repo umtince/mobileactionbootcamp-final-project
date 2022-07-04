@@ -32,9 +32,13 @@ public class ClsClassificationService {
             clsCategories = new ClsCategories();
             clsCategories.setDate(aipDailyComponents.getDate());
 
-            clsCategories.getCo().setCo(evaluateCoLevels(aipDailyComponents.getComponents().getCo()));
+            /*clsCategories.getCo().setCo(evaluateCoLevels(aipDailyComponents.getComponents().getCo()));
             clsCategories.getSo2().setSo2(evaluateSo2Levels(aipDailyComponents.getComponents().getSo2()));
-            clsCategories.getO3().setO3(evaluateO3Levels(aipDailyComponents.getComponents().getO3()));
+            clsCategories.getO3().setO3(evaluateO3Levels(aipDailyComponents.getComponents().getO3()));*/
+
+            clsCategories.setCo(evaluateCoLevels(aipDailyComponents.getComponents().getCo()));
+            clsCategories.setSo2(evaluateSo2Levels(aipDailyComponents.getComponents().getSo2()));
+            clsCategories.setO3(evaluateO3Levels(aipDailyComponents.getComponents().getO3()));
 
             clsCategoriesWrapper.getClsCategoriesList().add(clsCategories);
         }
