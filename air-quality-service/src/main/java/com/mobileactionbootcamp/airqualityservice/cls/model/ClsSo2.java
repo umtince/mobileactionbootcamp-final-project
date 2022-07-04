@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class ClsSo2 extends ClsBaseCategories{
-    //private String so2;
 
     @JsonProperty("SO2")
     @Override

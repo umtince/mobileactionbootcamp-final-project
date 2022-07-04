@@ -3,7 +3,6 @@ package com.mobileactionbootcamp.airqualityservice.cls.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ClsO3 extends ClsBaseCategories{
-    //private String o3;
 
     @JsonProperty("O3")
     @Override
