@@ -25,7 +25,13 @@ public class AqsAirQualityDocument {
        this.results = new ArrayList<>();
     }
 
-    public void addResuls(AqsResults aqsResults){
+    public void addResults(AqsResults aqsResults){
         this.results.add(aqsResults);
+    }
+
+    public void addMultipleResults(List<AqsResults> aqsResultsList){
+        for(AqsResults aqsResults : aqsResultsList){
+            this.results.add(aqsResults);
+        }
     }
 }

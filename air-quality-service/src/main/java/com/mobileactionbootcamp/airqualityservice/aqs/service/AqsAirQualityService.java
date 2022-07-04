@@ -4,12 +4,14 @@ import com.mobileactionbootcamp.airqualityservice.aqs.dao.AqsAirQualityDocumentD
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsAirQualityDocument;
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsResults;
 import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategories;
+import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategoriesWrapper;
 import com.mobileactionbootcamp.airqualityservice.cls.service.ClsClassificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,31 +42,70 @@ public class AqsAirQualityService {
 
     private AqsAirQualityDocument getAirQualityDocumentResponse(String city, LocalDate start, LocalDate end){
 
+        boolean isConsequentDates = false;
+        boolean isDocumentInDbChanged = false;
+        List<LocalDate> consequentDatesList = new ArrayList<>();
+
         AqsAirQualityDocument responseDocument = createEmptyDocumentWithCity(city);
 
         AqsAirQualityDocument documentInDb = getExistingDocumentByCity(city);
         if(documentInDb == null){
             documentInDb = createEmptyDocumentWithCity(city);
+            //isConsequentDates = true;
         }
 
         LocalDate incrementedStart = start;
         while(incrementedStart.isBefore(end.plusDays(1))){
 
-            AqsResults existingResultsOfCity = getExistingResultsOfCityByDate(incrementedStart, documentInDb);
-            if(existingResultsOfCity != null){
+            AqsResults existingResultsOfCityByDate = getExistingResultsOfCityByDate(incrementedStart, documentInDb);
+            if(existingResultsOfCityByDate != null){
                 //databasede var
-                responseDocument.addResuls(existingResultsOfCity);
+                responseDocument.addResults(existingResultsOfCityByDate);
+
+                if(consequentDatesList.size() > 0){
+                    isConsequentDates = true;
+                }
             } else {
                 //api dan al!
-                AqsResults resultsFromApi = getAirQualityResultsFromApi(city, incrementedStart, incrementedStart.plusDays(1));
+
+                consequentDatesList.add(incrementedStart);
+
+               /* if(isConsequentDates){
+
+                    isConsequentDates = false;
+                    consequentDatesList = new ArrayList<>();
+                } else {
+                    consequentDatesList.add(incrementedStart);
+                }*/
+
+               /* AqsResults resultsFromApi = getAirQualityResultsFromApi(city, incrementedStart, incrementedStart.plusDays(1));
                 responseDocument.addResuls(resultsFromApi);
-                documentInDb.addResuls(resultsFromApi);
+                documentInDb.addResuls(resultsFromApi);*/
+            }
+
+            if(incrementedStart.isEqual(end)){
+                isConsequentDates = true;
+            }
+
+            if(isConsequentDates && consequentDatesList.size() > 0){
+
+                List<AqsResults> resultsFromApi = getAirQualityResultsFromApi(city, consequentDatesList.get(0), consequentDatesList.get(consequentDatesList.size()-1).plusDays(1));
+                responseDocument.addMultipleResults(resultsFromApi);
+                documentInDb.addMultipleResults(resultsFromApi);
+                isDocumentInDbChanged = true;
+
+                isConsequentDates = false;
+                consequentDatesList = new ArrayList<>();
             }
 
             incrementedStart = incrementedStart.plusDays(1);
         }
 
-        aqsAirQualityDocumentDao.save(documentInDb);
+
+        if(isDocumentInDbChanged){
+            aqsAirQualityDocumentDao.save(documentInDb);
+        }
+
         return responseDocument;
     }
 
@@ -75,14 +116,23 @@ public class AqsAirQualityService {
         return aqsAirQualityDocument;
     }
 
-    private AqsResults getAirQualityResultsFromApi(String city, LocalDate start, LocalDate end){
-        AqsResults resultsFromApi = new AqsResults();
-        resultsFromApi.setDate(parseDateToString(start));
-        ClsCategories clsCategories = clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end));
+    private List<AqsResults> getAirQualityResultsFromApi(String city, LocalDate start, LocalDate end){
+        List<AqsResults> resultsFromApi = new ArrayList<>();
+        AqsResults dailyResultsFromApi;
+        //resultsFromApi.setDate(parseDateToString(start));
+        //ClsCategories clsCategories = clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end));
 
-        resultsFromApi.addCategory(clsCategories.getCo());
-        resultsFromApi.addCategory(clsCategories.getSo2());
-        resultsFromApi.addCategory(clsCategories.getO3());
+        ClsCategoriesWrapper clsCategoriesWrapper = clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end));
+
+        for (ClsCategories categories : clsCategoriesWrapper.getClsCategoriesList()) {
+            dailyResultsFromApi = new AqsResults();
+            dailyResultsFromApi.setDate(categories.getDate());
+            dailyResultsFromApi.addCategory(categories.getCo());
+            dailyResultsFromApi.addCategory(categories.getSo2());
+            dailyResultsFromApi.addCategory(categories.getO3());
+
+            resultsFromApi.add(dailyResultsFromApi);
+        }
 
         return resultsFromApi;
     }

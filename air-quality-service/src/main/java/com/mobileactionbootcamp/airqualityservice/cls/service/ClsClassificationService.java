@@ -2,6 +2,7 @@ package com.mobileactionbootcamp.airqualityservice.cls.service;
 
 
 import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategories;
+import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategoriesWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,17 +12,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ClsClassificationService {
     private final WebClient.Builder webClientBuilder;
 
-    public ClsCategories getAqiClassification(String location, String start, String end){
+    public ClsCategoriesWrapper getAqiClassification(String location, String start, String end){
 
-        ClsCategories clsCategories = webClientBuilder
+        ClsCategoriesWrapper clsCategoriesWrapper = webClientBuilder
                 .baseUrl("http://localhost:8083/classification/api/v1")
                 .build()
                 .get()
                 .uri("/aqi/" + location + "/" + start + "/" + end)
                 .retrieve()
-                .bodyToMono(ClsCategories.class)
+                .bodyToMono(ClsCategoriesWrapper.class)
                 .block();
 
-        return clsCategories;
+        return clsCategoriesWrapper;
     }
 }
