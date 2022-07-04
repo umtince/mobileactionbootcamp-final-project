@@ -7,6 +7,7 @@ import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategories;
 import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategoriesWrapper;
 import com.mobileactionbootcamp.airqualityservice.cls.service.ClsClassificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,9 +27,10 @@ public class AqsAirQualityService {
 
         if(start.isBefore(CONTROL_DATE)){
             throw new Exception("Start date can not be before than November 27th 2020");
-        }
-        else if(end.isBefore(start)){
+        } else if(end.isBefore(start)){
             throw new Exception("End date can not be before start date!");
+        } else if ((start == null && end != null) || (start != null && end == null)) {
+            throw new Exception("Start and end dates must either be both valid or both null!");
         }
 
         AqsAirQualityDocument aqsAirQualityDocument = getAirQualityDocumentResponse(city, start, end);

@@ -22,8 +22,24 @@ public class AqsAirQualityController {
 
     @GetMapping("/air-quality/{city}/{start}/{end}")
     public ResponseEntity getAirQuality(@PathVariable String city,
-                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate start,
-                                        @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate end){
+                                        @PathVariable(required = true) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate start,
+                                        @PathVariable(required = true) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate end){
+
+        AqsAirQualityDocument aqsAirQualityDocument;
+        String ret = "";
+        try {
+            aqsAirQualityDocument = aqsAirQualityService.handleAirQualityRequest(city,start,end);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(aqsAirQualityDocument);
+    }
+
+    @GetMapping("/air-quality/{city}")
+    public ResponseEntity getAirQualityWithoutDates(@PathVariable String city){
+
+        LocalDate end = LocalDate.now();
+        LocalDate start = end.minusDays(6);
 
         AqsAirQualityDocument aqsAirQualityDocument;
         String ret = "";
