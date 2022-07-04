@@ -51,7 +51,6 @@ public class AqsAirQualityService {
         AqsAirQualityDocument documentInDb = getExistingDocumentByCity(city);
         if(documentInDb == null){
             documentInDb = createEmptyDocumentWithCity(city);
-            //isConsequentDates = true;
         }
 
         LocalDate incrementedStart = start;
@@ -67,20 +66,7 @@ public class AqsAirQualityService {
                 }
             } else {
                 //api dan al!
-
                 consequentDatesList.add(incrementedStart);
-
-               /* if(isConsequentDates){
-
-                    isConsequentDates = false;
-                    consequentDatesList = new ArrayList<>();
-                } else {
-                    consequentDatesList.add(incrementedStart);
-                }*/
-
-               /* AqsResults resultsFromApi = getAirQualityResultsFromApi(city, incrementedStart, incrementedStart.plusDays(1));
-                responseDocument.addResuls(resultsFromApi);
-                documentInDb.addResuls(resultsFromApi);*/
             }
 
             if(incrementedStart.isEqual(end)){
@@ -117,12 +103,16 @@ public class AqsAirQualityService {
     }
 
     private List<AqsResults> getAirQualityResultsFromApi(String city, LocalDate start, LocalDate end){
-        List<AqsResults> resultsFromApi = new ArrayList<>();
-        AqsResults dailyResultsFromApi;
-        //resultsFromApi.setDate(parseDateToString(start));
-        //ClsCategories clsCategories = clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end));
 
         ClsCategoriesWrapper clsCategoriesWrapper = clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end));
+        List<AqsResults> resultsFromApi = createListOfDailyResultsFromApi(clsCategoriesWrapper);
+
+        return resultsFromApi;
+    }
+
+    private List<AqsResults> createListOfDailyResultsFromApi(ClsCategoriesWrapper clsCategoriesWrapper){
+        List<AqsResults> resultsFromApi = new ArrayList<>();
+        AqsResults dailyResultsFromApi;
 
         for (ClsCategories categories : clsCategoriesWrapper.getClsCategoriesList()) {
             dailyResultsFromApi = new AqsResults();
