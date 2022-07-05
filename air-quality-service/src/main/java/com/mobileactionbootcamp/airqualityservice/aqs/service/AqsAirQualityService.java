@@ -24,17 +24,46 @@ public class AqsAirQualityService {
     private final ClsClassificationService clsClassificationService;
     private final LocalDate CONTROL_DATE = LocalDate.of(2020,11,27);
 
+    public String handleAirQualityDeleteRequest(String city, LocalDate start, LocalDate end) throws Exception{
+        checkDates(start, end);
+
+        AqsAirQualityDocument documentInDbToBeAltered = getExistingDocumentByCity(city);
+
+        if(documentInDbToBeAltered == null){
+            throw new Exception("No results found for city");
+        }
+
+        LocalDate incrementedStart = start;
+        while(incrementedStart.isBefore(end.plusDays(1))){
+            removeElementFromDocumentByDate(documentInDbToBeAltered, incrementedStart);
+            incrementedStart = incrementedStart.plusDays(1);
+        }
+
+        aqsAirQualityDocumentDao.save(documentInDbToBeAltered);
+
+        return "Entries successfully deleted.";
+    }
+
+    private void removeElementFromDocumentByDate(AqsAirQualityDocument document, LocalDate date){
+        document.getResults().removeIf(e -> e.getDate().equals(parseDateToString(date)));
+    }
+
+
     public AqsAirQualityDocumentResponseDto handleAirQualityRequest(String city, LocalDate start, LocalDate end) throws Exception{
 
+        checkDates(start, end);
+
+        AqsAirQualityDocument aqsAirQualityDocument = getAirQualityDocumentResponse(city, start, end);
+
+        return IAqsAirQualityDocumentMapper.INSTANCE.convertToAqsAirQualityDocumentResponseDto(aqsAirQualityDocument);
+    }
+
+    private void checkDates(LocalDate start, LocalDate end) throws Exception{
         if(start.isBefore(CONTROL_DATE) || end.isBefore(CONTROL_DATE)){
             throw new Exception("Dates can not be before than November 27th 2020");
         } else if(end.isBefore(start)){
             throw new Exception("End date can not be before start date!");
         }
-
-        AqsAirQualityDocument aqsAirQualityDocument = getAirQualityDocumentResponse(city, start, end);
-
-        return IAqsAirQualityDocumentMapper.INSTANCE.convertToAqsAirQualityDocumentResponseDto(aqsAirQualityDocument);
     }
 
     private AqsAirQualityDocument getAirQualityDocumentResponse(String city, LocalDate start, LocalDate end){
@@ -62,7 +91,7 @@ public class AqsAirQualityService {
                     isConsequentDates = true;
                 }
             } else {
-                //api dan al!
+                //api dan alınacaklar listesine ekle!
                 consequentDatesList.add(incrementedStart);
             }
 
