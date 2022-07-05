@@ -1,6 +1,6 @@
 package com.mobileactionbootcamp.airqualityservice.aqs.service;
 
-import com.mobileactionbootcamp.airqualityservice.aqs.converter.AqsAirQualityDocumentMapper;
+import com.mobileactionbootcamp.airqualityservice.aqs.converter.IAqsAirQualityDocumentMapper;
 import com.mobileactionbootcamp.airqualityservice.aqs.dao.AqsAirQualityDocumentDao;
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsAirQualityDocument;
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsResults;
@@ -25,15 +25,15 @@ public class AqsAirQualityService {
 
     public AqsAirQualityDocumentResponseDto handleAirQualityRequest(String city, LocalDate start, LocalDate end) throws Exception{
 
-        if(start.isBefore(CONTROL_DATE)){
-            throw new Exception("Start date can not be before than November 27th 2020");
+        if(start.isBefore(CONTROL_DATE) || end.isBefore(CONTROL_DATE)){
+            throw new Exception("Dates can not be before than November 27th 2020");
         } else if(end.isBefore(start)){
             throw new Exception("End date can not be before start date!");
         }
 
         AqsAirQualityDocument aqsAirQualityDocument = getAirQualityDocumentResponse(city, start, end);
 
-        return AqsAirQualityDocumentMapper.INSTANCE.convertToAqsAirQualityDocumentResponseDto(aqsAirQualityDocument);
+        return IAqsAirQualityDocumentMapper.INSTANCE.convertToAqsAirQualityDocumentResponseDto(aqsAirQualityDocument);
     }
 
     private AqsAirQualityDocument getAirQualityDocumentResponse(String city, LocalDate start, LocalDate end){
