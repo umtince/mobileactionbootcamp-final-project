@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -85,9 +86,11 @@ public class AqsAirQualityService {
 
 
         if(isDocumentInDbChanged){
+            Collections.sort(documentInDb.getResults());
             aqsAirQualityDocumentDao.save(documentInDb);
         }
 
+        Collections.sort(responseDocument.getResults());
         return responseDocument;
     }
 
