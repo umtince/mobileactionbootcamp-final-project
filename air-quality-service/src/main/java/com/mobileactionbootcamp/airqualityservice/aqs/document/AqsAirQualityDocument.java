@@ -16,9 +16,7 @@ public class AqsAirQualityDocument {
 
     @Id
     private String id;
-    @JsonProperty("City")
     private String city;
-    @JsonProperty("Results")
     private List<AqsResults> results;
 
     public AqsAirQualityDocument(){
@@ -30,8 +28,6 @@ public class AqsAirQualityDocument {
     }
 
     public void addMultipleResults(List<AqsResults> aqsResultsList){
-        for(AqsResults aqsResults : aqsResultsList){
-            this.results.add(aqsResults);
-        }
+        this.results.addAll(aqsResultsList);
     }
 }

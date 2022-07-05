@@ -1,13 +1,13 @@
 package com.mobileactionbootcamp.airqualityservice.aqs.service;
 
+import com.mobileactionbootcamp.airqualityservice.aqs.converter.AqsAirQualityDocumentMapper;
 import com.mobileactionbootcamp.airqualityservice.aqs.dao.AqsAirQualityDocumentDao;
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsAirQualityDocument;
 import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsResults;
-import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategories;
-import com.mobileactionbootcamp.airqualityservice.cls.model.ClsCategoriesWrapper;
+import com.mobileactionbootcamp.airqualityservice.aqs.dto.AqsAirQualityDocumentResponseDto;
+import com.mobileactionbootcamp.airqualityservice.cls.model.*;
 import com.mobileactionbootcamp.airqualityservice.cls.service.ClsClassificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,25 +21,19 @@ public class AqsAirQualityService {
 
     private final AqsAirQualityDocumentDao aqsAirQualityDocumentDao;
     private final ClsClassificationService clsClassificationService;
-    private  LocalDate CONTROL_DATE = LocalDate.of(2020,11,27);
+    private final LocalDate CONTROL_DATE = LocalDate.of(2020,11,27);
 
-    public AqsAirQualityDocument handleAirQualityRequest(String city, LocalDate start, LocalDate end) throws Exception{
+    public AqsAirQualityDocumentResponseDto handleAirQualityRequest(String city, LocalDate start, LocalDate end) throws Exception{
 
         if(start.isBefore(CONTROL_DATE)){
             throw new Exception("Start date can not be before than November 27th 2020");
         } else if(end.isBefore(start)){
             throw new Exception("End date can not be before start date!");
-        } else if ((start == null && end != null) || (start != null && end == null)) {
-            throw new Exception("Start and end dates must either be both valid or both null!");
         }
 
         AqsAirQualityDocument aqsAirQualityDocument = getAirQualityDocumentResponse(city, start, end);
 
-        /**
-         * todo: convert aqsairqualitydocument to dto and return dto
-         * */
-
-        return aqsAirQualityDocument;
+        return AqsAirQualityDocumentMapper.INSTANCE.convertToAqsAirQualityDocumentResponseDto(aqsAirQualityDocument);
     }
 
     private AqsAirQualityDocument getAirQualityDocumentResponse(String city, LocalDate start, LocalDate end){
@@ -107,9 +101,7 @@ public class AqsAirQualityService {
     private List<AqsResults> getAirQualityResultsFromApi(String city, LocalDate start, LocalDate end){
 
         ClsCategoriesWrapper clsCategoriesWrapper = clsClassificationService.getAqiClassification(city, parseDateToString(start), parseDateToString(end));
-        List<AqsResults> resultsFromApi = createListOfDailyResultsFromApi(clsCategoriesWrapper);
-
-        return resultsFromApi;
+        return createListOfDailyResultsFromApi(clsCategoriesWrapper);
     }
 
     private List<AqsResults> createListOfDailyResultsFromApi(ClsCategoriesWrapper clsCategoriesWrapper){
@@ -119,14 +111,20 @@ public class AqsAirQualityService {
         for (ClsCategories categories : clsCategoriesWrapper.getClsCategoriesList()) {
             dailyResultsFromApi = new AqsResults();
             dailyResultsFromApi.setDate(categories.getDate());
-            dailyResultsFromApi.addCategory(categories.getCo());
-            dailyResultsFromApi.addCategory(categories.getSo2());
-            dailyResultsFromApi.addCategory(categories.getO3());
+
+            setDailyResults(new ClsCo(), dailyResultsFromApi, categories.getCo());
+            setDailyResults(new ClsSo2(), dailyResultsFromApi, categories.getSo2());
+            setDailyResults(new ClsO3(), dailyResultsFromApi, categories.getO3());
 
             resultsFromApi.add(dailyResultsFromApi);
         }
 
         return resultsFromApi;
+    }
+
+    private void setDailyResults(ClsBaseCategories clsBaseCategories, AqsResults dailyResults, String chemicalValue){
+        clsBaseCategories.setChemicalValue(chemicalValue);
+        dailyResults.addCategory(clsBaseCategories);
     }
 
     private AqsResults getExistingResultsOfCityByDate(LocalDate date, AqsAirQualityDocument documentInDb){

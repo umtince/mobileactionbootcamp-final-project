@@ -13,9 +13,7 @@ import java.util.List;
 @Setter
 public class AqsResults {
 
-    @JsonProperty("Date")
     private String date;
-    @JsonProperty("Categories")
     private List<ClsBaseCategories> categoriesList;
 
     public AqsResults(){

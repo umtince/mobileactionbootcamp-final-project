@@ -11,15 +11,16 @@ import java.util.List;
 @Setter
 public class AqsAirQualityDocumentResponseDto {
 
+    @JsonProperty("City")
     private String city;
-    private List<AqsResults> results;
+    @JsonProperty("Results")
+    private List<AqsResultsDto> results;
 
     public String getCity() {
         return city;
     }
 
-    @JsonProperty("")
-    public List<AqsResults> getResults() {
+    public List<AqsResultsDto> getResults() {
         return results;
     }
 }
