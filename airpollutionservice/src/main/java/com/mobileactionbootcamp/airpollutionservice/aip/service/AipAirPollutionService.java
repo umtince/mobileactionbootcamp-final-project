@@ -41,20 +41,15 @@ public class AipAirPollutionService {
         String json = makeWeatherApiRequest(geoGeocoding.getLat(), geoGeocoding.getLon(), startTime, endTime);
 
         ReadContext ctx = JsonPath.parse(json);
-        //Components components = parseAverageJsonComponents(json);
 
         List<AipDailyComponents> aipDailyComponentsList = parseDailyJsonComponents(ctx);
         AipDailyComponentsWrapper aipDailyComponentsWrapper = new AipDailyComponentsWrapper();
         aipDailyComponentsWrapper.setAipDailyComponentsList(aipDailyComponentsList);
 
         return aipDailyComponentsWrapper;
-
-        //return components;
     }
 
     private List<AipDailyComponents> parseDailyJsonComponents(ReadContext json){
-
-
 
         JSONArray jsonComponentsArray = json.read( "$.list[*]");
         int jsonComponentNumber = jsonComponentsArray.size();
@@ -67,12 +62,10 @@ public class AipAirPollutionService {
         List<AipDailyComponents> aipDailyComponentsList = new ArrayList<>();
         AipDailyComponents aipDailyComponents;
 
-
         dtStart = json.read( "$.list[0].dt");
         startDate = convertToLocalDateString(dtStart);
         startIndex = 0;
         for(int i=0; i<jsonComponentNumber; i++){
-            //dtStart = Long.parseLong(JsonPath.read(json, "$.list["+i+"].dt"));
 
             dtEnd = json.read( "$.list["+i+"].dt");
             endDate = convertToLocalDateString(dtEnd);
@@ -90,7 +83,6 @@ public class AipAirPollutionService {
                 dtStart = json.read( "$.list["+i+"].dt");
                 startDate = convertToLocalDateString(dtStart);
                 startIndex = i;
-
             }
         }
 
