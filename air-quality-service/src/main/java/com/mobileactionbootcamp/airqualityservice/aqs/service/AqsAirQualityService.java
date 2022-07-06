@@ -7,7 +7,12 @@ import com.mobileactionbootcamp.airqualityservice.aqs.document.AqsResults;
 import com.mobileactionbootcamp.airqualityservice.aqs.dto.AqsAirQualityDocumentResponseDto;
 import com.mobileactionbootcamp.airqualityservice.cls.model.*;
 import com.mobileactionbootcamp.airqualityservice.cls.service.ClsClassificationService;
+import com.mobileactionbootcamp.airqualityservice.log.LogMessage;
+import com.mobileactionbootcamp.airqualityservice.log.MQConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +28,17 @@ public class AqsAirQualityService {
 
     private final AqsAirQualityDocumentDao aqsAirQualityDocumentDao;
     private final ClsClassificationService clsClassificationService;
+    private final AmqpTemplate template;
     private final LocalDate CONTROL_DATE = LocalDate.of(2020,11,27);
+
+    @Value("${rabbit.queue.name}")
+    public String QUEUE;
+
+    @Value("${rabbit.exchange.name}")
+    public String EXCHANGE;
+
+    @Value("${rabbit.routingkey.name}")
+    public String ROUTING_KEY;
 
     public String handleAirQualityDeleteRequest(String city, LocalDate start, LocalDate end) throws Exception{
         checkDates(start, end);
@@ -86,6 +102,7 @@ public class AqsAirQualityService {
             if(existingResultsOfCityByDate != null){
                 //databasede var
                 responseDocument.addResults(existingResultsOfCityByDate);
+                sendLogMessage(parseDateToString(incrementedStart),city,"Returned from Database");
 
                 if(consequentDatesList.size() > 0){
                     isConsequentDates = true;
@@ -93,6 +110,7 @@ public class AqsAirQualityService {
             } else {
                 //api dan alınacaklar listesine ekle!
                 consequentDatesList.add(incrementedStart);
+                sendLogMessage(parseDateToString(incrementedStart),city,"Returned from API");
             }
 
             if(incrementedStart.isEqual(end)){
@@ -121,6 +139,16 @@ public class AqsAirQualityService {
 
         Collections.sort(responseDocument.getResults());
         return responseDocument;
+    }
+
+    private void sendLogMessage(String date, String city, String returnedFrom){
+        LogMessage logMessage = new LogMessage();
+        logMessage.setLogId(UUID.randomUUID().toString());
+        logMessage.setCity(city);
+        logMessage.setDate(date);
+        logMessage.setReturnedFrom(returnedFrom);
+
+        template.convertAndSend(EXCHANGE, ROUTING_KEY, logMessage);
     }
 
     private AqsAirQualityDocument createEmptyDocumentWithCity(String city){
