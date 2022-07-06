@@ -32,10 +32,6 @@ public class ClsClassificationService {
             clsCategories = new ClsCategories();
             clsCategories.setDate(aipDailyComponents.getDate());
 
-            /*clsCategories.getCo().setCo(evaluateCoLevels(aipDailyComponents.getComponents().getCo()));
-            clsCategories.getSo2().setSo2(evaluateSo2Levels(aipDailyComponents.getComponents().getSo2()));
-            clsCategories.getO3().setO3(evaluateO3Levels(aipDailyComponents.getComponents().getO3()));*/
-
             clsCategories.setCo(evaluateCoLevels(aipDailyComponents.getComponents().getCo()));
             clsCategories.setSo2(evaluateSo2Levels(aipDailyComponents.getComponents().getSo2()));
             clsCategories.setO3(evaluateO3Levels(aipDailyComponents.getComponents().getO3()));
@@ -43,23 +39,15 @@ public class ClsClassificationService {
             clsCategoriesWrapper.getClsCategoriesList().add(clsCategories);
         }
 
-        //ClsCategories clsCategories = new ClsCategories();
-        /*clsCategories.getCo().setCategory(evaluateCoLevels(components.getCo()));
-        clsCategories.getSo2().setCategory(evaluateSo2Levels(components.getSo2()));
-        clsCategories.getO3().setCategory(evaluateO3Levels(components.getO3()));*/
-       /* clsCategories.getCo().setCo(evaluateCoLevels(components.getCo()));
-        clsCategories.getSo2().setSo2(evaluateSo2Levels(components.getSo2()));
-        clsCategories.getO3().setO3(evaluateO3Levels(components.getO3()));*/
-
         return clsCategoriesWrapper;
     }
 
-    private String parseDateToString(LocalDate date){
+    public String parseDateToString(LocalDate date){
         DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return date.format(DATE_FORMATTER);
     }
 
-    private String evaluateCoLevels(BigDecimal co){
+    public String evaluateCoLevels(BigDecimal co){
 
         co = co.setScale(1, RoundingMode.HALF_UP);
         String result = "";
@@ -81,7 +69,7 @@ public class ClsClassificationService {
         return result;
     }
 
-    private String evaluateSo2Levels(BigDecimal so2){
+    public String evaluateSo2Levels(BigDecimal so2){
         so2 = so2.setScale(1, RoundingMode.HALF_UP);
         String result = "";
 
@@ -102,7 +90,7 @@ public class ClsClassificationService {
         return result;
     }
 
-    private String evaluateO3Levels(BigDecimal o3){
+    public String evaluateO3Levels(BigDecimal o3){
         o3 = o3.setScale(1, RoundingMode.HALF_UP);
         String result = "";
 
