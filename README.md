@@ -81,7 +81,7 @@ Air Quality Service is responsible from
 - saving new air quality results into database
 - deleting air quality results from database
 - not making API calls for existing air quality results
-- Sending log messages to Log Server via RabbitMQ (logging the origin of returned air quality results whether from DB or API)
+- Sending log messages to Log Service via RabbitMQ (logging the origin of returned air quality results whether from DB or API)
 
 ## Dependencies of Air Quality Service
 
