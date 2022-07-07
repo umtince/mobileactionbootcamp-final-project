@@ -56,4 +56,28 @@ Between these 2 requests dates are turned to Unix Time as requested by OpenWeath
 The purpose of this service is to determine the danger levels of chemical values returned from Air Pollution Service. Classification is done by the use of  [AQI Category,
 Pollutants and Health Breakpoints Table in this wiki page](https://en.wikipedia.org/wiki/Air_quality_index#CAQI).
 
-Classification Service takes city, start date and end date parameters and makes an API call to Air Pollution Service. Using the response object from Air Polllution Service
+Classification Service takes city, start date and end date parameters and makes an API call to Air Pollution Service. Using the response object from Air Polllution Service, it classifies the chemical values into a category of Good, Satisfactory, Moderate, Poor, Severe and Hazardous and returns a list of categories seperated by date.
+
+## Dependencies of Classification Service
+
+- Lombok
+- Spring Web
+- Spring Boot Starter Webflux
+- OpenAPI Swagger
+
+## Example Request and Response
+
+![examplecls](https://user-images.githubusercontent.com/54290546/177811999-e7b4e736-9b96-4b29-b4b5-3a4abf6ad5af.PNG)
+
+
+# Air Quality Service
+
+The purpose of Air Quality Service is to take city, start date and end date as parameters and to return a list of air quality results seperated by date. 
+Air Quality Service is responsible from 
+
+- 
+
+
+- making smart choices in order to not use excessive API requests
+- making a choice whether to make an API request to Classification Service or to look into database for the results of a certain day
+- logging the origin of a result (meaning whether it came from an API call or from the Database)
