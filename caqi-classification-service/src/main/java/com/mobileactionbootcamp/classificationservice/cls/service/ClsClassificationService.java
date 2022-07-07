@@ -21,6 +21,8 @@ public class ClsClassificationService {
     private int EQUAL = 0;
     private int MORE = 1;
     private final AipAirPollutionService aipAirPollutionService;
+    private int AVG_8HR = 3;
+    private BigDecimal divisor = new BigDecimal(AVG_8HR) ;
 
     public ClsCategoriesWrapper getAqiResults(String location, LocalDate start , LocalDate end){
 
@@ -49,7 +51,9 @@ public class ClsClassificationService {
 
     public String evaluateCoLevels(BigDecimal co){
 
+        co = co.divide(divisor, 1, RoundingMode.HALF_UP);
         co = co.setScale(1, RoundingMode.HALF_UP);
+
         String result = "";
 
         if(co.compareTo(BigDecimal.valueOf(1.1)) == LESS){
@@ -91,6 +95,9 @@ public class ClsClassificationService {
     }
 
     public String evaluateO3Levels(BigDecimal o3){
+
+
+        o3 = o3.divide(divisor, 1, RoundingMode.HALF_UP);
         o3 = o3.setScale(1, RoundingMode.HALF_UP);
         String result = "";
 

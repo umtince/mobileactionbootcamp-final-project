@@ -35,31 +35,31 @@ class ClsClassificationServiceTest {
     @Test
     void evaluateCoLevels2() {
         BigDecimal value = BigDecimal.valueOf(2);
-        Assertions.assertEquals("Satisfactory", clsClassificationService.evaluateCoLevels(value));
+        Assertions.assertEquals("Good", clsClassificationService.evaluateCoLevels(value));
     }
 
     @Test
     void evaluateCoLevels3() {
         BigDecimal value = BigDecimal.valueOf(5);
-        Assertions.assertEquals("Moderate", clsClassificationService.evaluateCoLevels(value));
+        Assertions.assertEquals("Satisfactory", clsClassificationService.evaluateCoLevels(value));
     }
 
     @Test
     void evaluateCoLevels4() {
         BigDecimal value = BigDecimal.valueOf(17);
-        Assertions.assertEquals("Poor", clsClassificationService.evaluateCoLevels(value));
+        Assertions.assertEquals("Moderate", clsClassificationService.evaluateCoLevels(value));
     }
 
     @Test
     void evaluateCoLevels5() {
         BigDecimal value = BigDecimal.valueOf(34);
-        Assertions.assertEquals("Severe", clsClassificationService.evaluateCoLevels(value));
+        Assertions.assertEquals("Poor", clsClassificationService.evaluateCoLevels(value));
     }
 
     @Test
     void evaluateCoLevels6() {
         BigDecimal value = BigDecimal.valueOf(40);
-        Assertions.assertEquals("Hazardous", clsClassificationService.evaluateCoLevels(value));
+        Assertions.assertEquals("Poor", clsClassificationService.evaluateCoLevels(value));
     }
 
 
@@ -108,19 +108,19 @@ class ClsClassificationServiceTest {
     @Test
     void evaluateO3Levels2() {
         BigDecimal value = BigDecimal.valueOf(100);
-        Assertions.assertEquals("Satisfactory", clsClassificationService.evaluateO3Levels(value));
+        Assertions.assertEquals("Good", clsClassificationService.evaluateO3Levels(value));
     }
 
     @Test
     void evaluateO3Levels3() {
         BigDecimal value = BigDecimal.valueOf(160);
-        Assertions.assertEquals("Moderate", clsClassificationService.evaluateO3Levels(value));
+        Assertions.assertEquals("Satisfactory", clsClassificationService.evaluateO3Levels(value));
     }
 
     @Test
     void evaluateO3Levels4() {
         BigDecimal value = BigDecimal.valueOf(200);
-        Assertions.assertEquals("Poor", clsClassificationService.evaluateO3Levels(value));
+        Assertions.assertEquals("Satisfactory", clsClassificationService.evaluateO3Levels(value));
     }
 
     @Test
@@ -132,7 +132,7 @@ class ClsClassificationServiceTest {
     @Test
     void evaluateO3Levels6() {
         BigDecimal value = BigDecimal.valueOf(750);
-        Assertions.assertEquals("Hazardous", clsClassificationService.evaluateO3Levels(value));
+        Assertions.assertEquals("Severe", clsClassificationService.evaluateO3Levels(value));
     }
 
 }
