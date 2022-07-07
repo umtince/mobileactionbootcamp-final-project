@@ -4,6 +4,11 @@
 
 This project's aim is to provide a Restfull Spring Boot Application which takes **city name**, **start date** and **end date** as parameters and returns air pollution status in the city between start and end dates using [OpenWeather's API endpoints](https://openweathermap.org/) while taking microservice architecture into consideration.
 
+## How to start using it
+
+In order to use the Air Quality Microservices, start all 5 services and make sure you have RabbitMQ and MongoDB installed. If you want to tweak the connection settings of MongoDB and RabbitMQ, you may change them in the application.properties files of respective Spring Boot applications.
+
+One all 5 services are up and running, make an API request to `http://localhost:8084/air-quality-api/v1/air-quality/{cityName}` or `http://localhost:8084/air-quality-api/v1/air-quality/{cityName}/{startDate}/{endDate}` and make sure to send date formatted as `dd-MM-yyyy`
 
 ## Microservices Architecture
 ![architecture](https://user-images.githubusercontent.com/54290546/177798579-659e8616-1e63-4132-9a9d-11b09f4e644b.PNG)
