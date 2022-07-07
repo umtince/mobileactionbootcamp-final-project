@@ -75,9 +75,51 @@ Classification Service takes city, start date and end date parameters and makes 
 The purpose of Air Quality Service is to take city, start date and end date as parameters and to return a list of air quality results seperated by date. 
 Air Quality Service is responsible from 
 
-- 
+- returning the air quality results sorted by date
+- returning last 7 days of air quality results if dates are not specified
+- making smart decisions to minimize extensive API requests.
+- saving new air quality results into database
+- deleting air quality results from database
+- not making API calls for existing air quality results
+- Sending log messages to Log Server via RabbitMQ (logging the origin of returned air quality results whether from DB or API)
+
+## Dependencies of Air Quality Service
+
+- Lombok
+- Spring Web
+- Spring Boot Starter Webflux
+- OpenAPI Swagger
+- Spring Data MongoDB
+- Mapstruct
+- RabbitMQ
 
 
-- making smart choices in order to not use excessive API requests
-- making a choice whether to make an API request to Classification Service or to look into database for the results of a certain day
-- logging the origin of a result (meaning whether it came from an API call or from the Database)
+## Example Request and Response
+
+![aqssave](https://user-images.githubusercontent.com/54290546/177826394-24bb3ab0-3524-468d-9ec4-36f2cdc6f9a5.png)
+
+![aqsdelete](https://user-images.githubusercontent.com/54290546/177826751-56748aa9-2dea-40f3-afaa-da5fd9c9adcd.png)
+
+
+## MongoDB Screenshots
+![aqsdb](https://user-images.githubusercontent.com/54290546/177826451-b4809c84-026c-4e8d-a1c0-2da4367f54f9.png)
+
+
+# Log Service
+
+The purpose of Log Service is to be a centralized log service for future microservices and existing ones. The log messages are received via RabbitMQ queue and logged into console and MongoDB.
+
+# Dependencies of Log Service
+- Lombok
+- Spring Web
+- Spring Data MongoDB
+- RabbitMQ
+- Slf4j (Lombok)
+
+
+## Console and MongoDB Screenshots
+
+![logconsole](https://user-images.githubusercontent.com/54290546/177828349-4f7ebaf6-c1bc-44a9-b1bc-863fe63f3287.PNG)
+![logdb](https://user-images.githubusercontent.com/54290546/177828357-43c5ab09-08a8-49c7-a2f6-ca2eba0e5a1c.PNG)
+
+
