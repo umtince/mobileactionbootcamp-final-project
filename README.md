@@ -109,7 +109,7 @@ Air Quality Service is responsible from
 
 The purpose of Log Service is to be a centralized log service for future microservices and existing ones. The log messages are received via RabbitMQ queue and logged into console and MongoDB.
 
-# Dependencies of Log Service
+## Dependencies of Log Service
 - Lombok
 - Spring Web
 - Spring Data MongoDB
